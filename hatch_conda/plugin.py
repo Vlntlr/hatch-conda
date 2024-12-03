@@ -246,13 +246,16 @@ class CondaEnvironment(EnvironmentInterface):
         )
 
     def enter_shell(self, name, path, args):  # no cov
-        cmdl = f"{self.config_command} activate {self.conda_env_name}"
+        if self.config_prefix is not None:
+            cmdl = f"{self.config_command} activate {self.config_prefix}"
+        else:
+            cmdl = f"{self.config_command} activate {self.conda_env_name}"
+
         shell_executor = getattr(self.shells, f"enter_{name}", None)
         if shell_executor is None:
             raise NotImplementedError(f"entering {name} shell in not supported yet")
-        else:
-            self.apply_env_vars()
-            shell_executor(path, args, cmdl)
+        self.apply_env_vars()
+        shell_executor(path, args, cmdl)
 
     def apply_env_vars(self):
         if self.config_command == "micromamba":
