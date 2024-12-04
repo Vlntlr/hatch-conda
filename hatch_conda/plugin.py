@@ -157,7 +157,7 @@ class CondaEnvironment(EnvironmentInterface):
         else:
             command = [self.config_command, "env", "create", "--file", self.environment_file]
         if self.config_prefix is not None:
-            command += ["--prefix", self.config_prefix]
+            command += ["--prefix", f"{self.config_prefix}/{self.conda_env_name}"]
         else:
             command += ["-n", self.conda_env_name]
 
@@ -171,7 +171,7 @@ class CondaEnvironment(EnvironmentInterface):
         command = [self.config_command, "env", "remove", "-y"]
 
         if self.config_prefix is not None:
-            command += ["--prefix", self.config_prefix]
+            command += ["--prefix", f"{self.config_prefix}/{self.conda_env_name}"]
         else:
             command += ["-n", self.conda_env_name]
 
@@ -189,7 +189,7 @@ class CondaEnvironment(EnvironmentInterface):
             head.append("--no-capture-output")
 
         if self.config_prefix is not None:
-            head += ["--prefix", self.config_prefix]
+            head += ["--prefix", f"{self.config_prefix}/{self.conda_env_name}"]
         else:
             head += ["-n", self.conda_env_name]
 
@@ -247,7 +247,7 @@ class CondaEnvironment(EnvironmentInterface):
 
     def enter_shell(self, name, path, args):  # no cov
         if self.config_prefix is not None:
-            cmdl = f"{self.config_command} activate {self.config_prefix}"
+            cmdl = f"{self.config_command} activate {'/'.join([self.config_prefix,self.conda_env_name])}"
         else:
             cmdl = f"{self.config_command} activate {self.conda_env_name}"
 
