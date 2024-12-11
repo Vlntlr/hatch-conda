@@ -67,7 +67,7 @@ profile = "black"
 include_trailing_comma = true
 use_parentheses = true
 src_paths = ["hatch_conda", "tests"]
-skip = [".direnv", ".hatch"]
+skip = [".venv", ".hatch"]
 line_length = 120
 
 [tool.coverage.run]
@@ -86,7 +86,7 @@ skip_empty = true
 exclude_lines = ["no cov", "if __name__ == .__main__.:", "if TYPE_CHECKING:", "raise NotImplementedError"]
 
 [tool.flake8]
-exclude = [".direnv", ".hatch"]
+exclude = [".venv", ".hatch"]
 select = ["B","C","E","F","W","B001","B003","B006","B007","B301","B305","B306","B902","Q001","Q002","Q003"]
 ignore = ["E203","E722","W503"]
 max-line-length = 120
