@@ -119,7 +119,7 @@ class CondaEnvironment(EnvironmentInterface):
 
     def _get_conda_env_path(self, name: str):
         if self.config_prefix is not None:
-            return self.config_prefix
+            return str(Path(self.root, self.config_prefix,self.conda_env_name))
 
         if self.config_command == "micromamba":
             output = self.platform.check_command_output([self.config_command, "info", "--name", name])
@@ -180,7 +180,7 @@ class CondaEnvironment(EnvironmentInterface):
     def exists(self):
         env_path = self._get_conda_env_path(self.conda_env_name)
         if env_path is not None:
-            return Path(self._get_conda_env_path(self.conda_env_name)).exists()
+            return Path(env_path).exists()
         return False
 
     def construct_conda_run_command(self, command):
@@ -247,7 +247,8 @@ class CondaEnvironment(EnvironmentInterface):
 
     def enter_shell(self, name, path, args):  # no cov
         if self.config_prefix is not None:
-            cmdl = f"{self.config_command} activate {'/'.join([self.config_prefix,self.conda_env_name])}"
+            env_path = self._get_conda_env_path(self.conda_env_name)
+            cmdl = f"{self.config_command} activate {env_path}"
         else:
             cmdl = f"{self.config_command} activate {self.conda_env_name}"
 
@@ -268,6 +269,7 @@ class CondaEnvironment(EnvironmentInterface):
                 if sys.platform == "win32":
                     value_fixed = value_fixed.replace("%", "%%%%%%%%")
                 env_vars.append(f"{env_var}={value_fixed}")
+            env_path = self._get_conda_env_path(self.conda_env_name)
             self.platform.check_command(
-                ["conda", "env", "config", "vars", "set", "-n", self.conda_env_name, "--"] + env_vars
+                ["conda", "env", "config", "vars", "set", "-p", env_path, "--"] + env_vars
             )
