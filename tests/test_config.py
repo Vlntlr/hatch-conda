@@ -28,7 +28,7 @@ class TestPythonVersion:
         assert environment.python_version == default_python_version
 
     def test_long(self, isolation, data_dir, platform):
-        env_config = {"python": "3.10", "prefix": ".direnv/"}
+        env_config = {"python": "3.10", "prefix": ".venv/"}
         project = Project(
             isolation,
             config={
@@ -49,7 +49,7 @@ class TestPythonVersion:
         )
 
         assert environment.python_version == "3.10"
-        assert environment.config_prefix == ".direnv/"
+        assert environment.config_prefix == ".venv/"
         assert environment.conda_env_name == "my-app_default_3.10"
 
     def test_short(self, isolation, data_dir, platform):
